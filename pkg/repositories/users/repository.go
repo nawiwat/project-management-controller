@@ -35,7 +35,18 @@ func (f *usersRepository) Create(ctx context.Context, in model.User) (error) {
 
 func (f *usersRepository) Query(ctx context.Context) ([]model.User, error) {
 	var out []model.User
-	err := f.db.Limit(50).Order("id asc").Preload("Membership.Project").Find(&out).Error
+	err := f.db.Limit(50).Order("id asc").Find(&out).Error
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query users")
+	}
+
+	return out, nil
+}
+
+func (f *usersRepository) QueryInfo(ctx context.Context,id uint64) ([]model.User, error) {
+	var out []model.User
+	err := f.db.Preload("Membership.Project").Where("id = ?",id).Find(&out).Error
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to query users")

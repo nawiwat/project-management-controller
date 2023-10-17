@@ -37,6 +37,24 @@ func (r *AppController) GetUsers(c echo.Context) error {
 	return c.JSON(200, map[string]interface{}{"data": f})
 }
 
+func (r *AppController) GetUser(c echo.Context) error {
+	var usr model.User
+	if err := c.Bind(&usr); err != nil {
+		return err
+	}
+	if err := c.Validate(&usr); err != nil {
+		return err
+	}
+
+	f, err := r.controllerService.GetUser(c.Request().Context(),usr.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(200, map[string]interface{}{"data": f})
+}
+
 func (r *AppController) AddUser(c echo.Context) error {
 	var usr model.User
 

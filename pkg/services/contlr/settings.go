@@ -10,9 +10,11 @@ import (
 
 type ControllerService interface {
 	GetUsers(ctx context.Context) ([]model.User, error)
+	GetUser(ctx context.Context, f uint64) ([]model.User, error)
 	AddUser(ctx context.Context, f model.User) error
 
 	GetProjects(ctx context.Context) ([]model.Project, error)
+	GetProjectInfo(ctx context.Context, f uint64) ([]model.Project, error)
 	AddProject(ctx context.Context, f model.Project) error
 	AddMember(ctx context.Context, f model.Membership) error
 }

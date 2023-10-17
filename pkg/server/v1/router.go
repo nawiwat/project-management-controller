@@ -24,10 +24,12 @@ func registerControllerV1(
 	h := handlers.NewAppController(controllerService)
 	
 	c.GET("/users", h.GetUsers)
+	c.GET("/user", h.GetUser)
 	c.POST("/user", h.AddUser)
 
 
 	c.GET("/projects",h.GetProjects)
+	c.GET("/project",h.GetProjectInfo)
 	c.POST("/project",h.AddProject)
 	c.POST("/member",h.AddMember)
 	// c.GET("/fraud-rules", h.GetFraudRules)

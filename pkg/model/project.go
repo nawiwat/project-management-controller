@@ -5,7 +5,7 @@ import (
 )
 
 type Project struct {
-	ID       		uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id"`
+	ID       		uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
 	Name       		string			`json:"name"`
 	Description   	string			`gorm:"not null" json:"description"`
 	Progess       	string			`json:"progess"`
@@ -15,6 +15,7 @@ type Project struct {
 	Github 			string			`gorm:"not null" json:"github"`
 	Phone   		string			`gorm:"not null" json:"phone"`
 	Membership		[]Membership	
+
 }
 
 type Membership struct {

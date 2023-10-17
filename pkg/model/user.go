@@ -1,7 +1,7 @@
 package model
 
 type User struct {
-	ID          	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id"`
+	ID          	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
 	Username      	string			`gorm:"not null" json:"username"`
 	Password       	string			`gorm:"not null" json:"password"`
 	Name  			string			`gorm:"not null" json:"name"`

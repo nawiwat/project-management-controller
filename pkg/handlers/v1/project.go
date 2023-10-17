@@ -24,6 +24,26 @@ func (r *AppController) GetProjects(c echo.Context) error {
 	return c.JSON(200, map[string]interface{}{"data": f})
 }
 
+func (r *AppController) GetProjectInfo(c echo.Context) error {
+	var fr model.Project
+
+	if err := c.Bind(&fr); err != nil {
+		return err
+	}
+	if err := c.Validate(&fr); err != nil {
+		return err
+	}
+	
+	f, err := r.controllerService.GetProjectInfo(c.Request().Context(),fr.ID)
+
+	if err != nil {
+		return err
+	}
+
+
+	return c.JSON(200, map[string]interface{}{"data": f})
+}
+
 func (r *AppController) AddProject(c echo.Context) error {
 	var prj model.Project
 

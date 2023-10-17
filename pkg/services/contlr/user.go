@@ -18,6 +18,17 @@ func (s *service) GetUsers(ctx context.Context) ([]model.User, error) {
 	return out, err
 }
 
+func (s *service) GetUser(ctx context.Context,id uint64) ([]model.User, error) {
+
+	out, err := s.usersRepo.QueryInfo(ctx,id)
+
+	if err != nil {
+		return []model.User{}, err
+	}
+
+	return out, err
+}
+
 func (s *service) AddUser(ctx context.Context, f model.User) error {
 	err := 	s.usersRepo.Create(ctx, model.User{
 			Username:   	f.Username,
