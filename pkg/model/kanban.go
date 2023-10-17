@@ -1,7 +1,13 @@
 package model
 
 type KanbanBoard struct {
+	ID          uint64          `gorm:"primaryKey;autoIncrement:true" json:"id" `
+	ProjectID 	uint64          `json:"project_id" query:"project_id" validate:"number"`
+	Column		[]BoardColumn	`gorm:"foreignKey:KanbanBoardID;references:ID" json:"columns"`
+}
+
+type BoardColumn struct {
 	ID          uint64          `gorm:"primaryKey;autoIncrement:true" json:"id"`
-	FraudRuleID uint64          `json:"fraud_rule_id" query:"fraud_rule_id" validate:"required,number"`
-	Version     uint64          `json:"version"`
+	KanbanBoardID	uint64		`json:"kanban_board_id" query:"kanban_board_id" validate:"number"`
+	Name		string			`json:"name"`
 }

@@ -9,10 +9,11 @@ import (
 // Migrate to migrate DB
 func Migrate(db *gorm.DB) error {
 	if err := db.AutoMigrate(
-		// &model.FraudRule{},
 		&model.Membership{},
 		&model.Project{},
 		&model.User{},
+		&model.KanbanBoard{},
+		&model.BoardColumn{},
 	); err != nil {
 		return err
 	}

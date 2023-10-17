@@ -1,10 +1,6 @@
 package handlers
 
 import (
-	// inputs "acw-crypto-risk-management/pkg/inputs/riskmgmt"
-	// "acw-crypto-risk-management/pkg/middlewares"
-	// "acw-crypto-risk-management/pkg/requests"
-	// "acw-crypto-risk-management/pkg/services/riskmgmt"
 	// "encoding/json"
 	// "strings"
 	// "time"
@@ -33,7 +29,7 @@ func (r *AppController) GetProjectInfo(c echo.Context) error {
 	if err := c.Validate(&fr); err != nil {
 		return err
 	}
-	
+
 	f, err := r.controllerService.GetProjectInfo(c.Request().Context(),fr.ID)
 
 	if err != nil {

@@ -1,7 +1,6 @@
 package contlr
 
 import (
-	// "acw-crypto-risk-management/pkg/inputs/riskmgmt"
 	"app-controller/pkg/model"
 	"app-controller/pkg/repositories"
 	"context"
@@ -17,30 +16,27 @@ type ControllerService interface {
 	GetProjectInfo(ctx context.Context, f uint64) ([]model.Project, error)
 	AddProject(ctx context.Context, f model.Project) error
 	AddMember(ctx context.Context, f model.Membership) error
+
+	AddBoardColumn(ctx context.Context, f model.BoardColumn) error
+	GetKanbanBoard(ctx context.Context, f uint64) ([]model.KanbanBoard, error)
 }
 
 type service struct {
 	usersRepo         			repositories.UsersRepository
 	projectsRepo 				repositories.ProjectsRepository
-	// suspectedUserRepo 	   			repositories.SuspectedUserRepository
-	// fraudRulesTransformer  			FraudRulesTransformer
-	// freezeStatusRepo				repositories.FreezeStatusRepository
-	// cache                  			CacheClient
+	kanbanBoardRepo   			repositories.KanbanBoardRepository
 }
 
 func NewControllerService(
 	usersRepo repositories.UsersRepository,
 	projectsRepo repositories.ProjectsRepository,
-	// suspectedUserRepo 	   repositories.SuspectedUserRepository,
-	// freezeStatusRepo		repositories.FreezeStatusRepository,
-	// cache CacheClient,
+	kanbanBoardRepo repositories.KanbanBoardRepository,
+	
 ) ControllerService {
 	baseService := &service{
 		usersRepo:         usersRepo,
 		projectsRepo: 		projectsRepo,
-		// suspectedUserRepo:		suspectedUserRepo,
-		// freezeStatusRepo:		freezeStatusRepo,
-		// cache:                  cache,
+		kanbanBoardRepo:	kanbanBoardRepo,
 	}
 
 	return baseService

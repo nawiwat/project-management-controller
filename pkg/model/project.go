@@ -16,6 +16,7 @@ type Project struct {
 	Phone   		string			`gorm:"not null" json:"phone"`
 	Membership		[]Membership	
 
+	KanbanBoard		KanbanBoard		`gorm:"foreignKey:ProjectID;references:ID" json:"kanban_board"`
 }
 
 type Membership struct {

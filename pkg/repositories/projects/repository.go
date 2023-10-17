@@ -1,4 +1,4 @@
-package Users
+package projects
 
 import (
 	"app-controller/pkg/model"
@@ -25,12 +25,12 @@ func New(db *gorm.DB) repositories.ProjectsRepository {
 	}
 }
 
-func (f *projectsRepository) Create(ctx context.Context, in model.Project) (error) {
+func (f *projectsRepository) Create(ctx context.Context, in model.Project) (model.Project, error) {
 	if err := f.db.Create(&in).Error; err != nil {
-		return errors.Wrap(err, "fail to create project")
+		return in, errors.Wrap(err, "fail to create project")
 	}
 
-	return nil
+	return in, nil
 }
 
 func (f *projectsRepository) Query(ctx context.Context) ([]model.Project, error) {
@@ -46,7 +46,7 @@ func (f *projectsRepository) Query(ctx context.Context) ([]model.Project, error)
 
 func (f *projectsRepository) QueryInfo(ctx context.Context, P_ID uint64) ([]model.Project, error) {
 	var out []model.Project
-	err := f.db.Preload("Membership.User").Where("id = ?",P_ID).Find(&out).Error
+	err := f.db.Preload("KanbanBoard").Preload("Membership.User").Where("id = ?",P_ID).Find(&out).Error
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to query project")

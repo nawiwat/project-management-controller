@@ -32,16 +32,7 @@ func registerControllerV1(
 	c.GET("/project",h.GetProjectInfo)
 	c.POST("/project",h.AddProject)
 	c.POST("/member",h.AddMember)
-	// c.GET("/fraud-rules", h.GetFraudRules)
-	// c.GET("/fraud-rules-versions", h.GetFraudRulesAllVersions)
-	// c.POST("/fraud-rules", h.AddFraudRule)
-	// c.POST("/fraud-value-versions", h.AddFraudValueVersion)
 
-	// //Suspected Users
-	// c.GET("/suspected_users", h.GetSuspectedUsers)
-	// c.POST("/suspected_users",h.AddSuspectedUsers)
-
-	// //Freeze&unfreeze
-	// c.POST("/freeze",h.AddFreezeStatus)
-	// //c.GET("/freeze", h.GetFreezeStatus)
+	c.POST("/column",h.AddBoardColumn)
+	c.GET("/kanban_board",h.GetKanbanBoard)
 }

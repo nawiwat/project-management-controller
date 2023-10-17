@@ -1,7 +1,6 @@
 package contlr
 
 import (
-	// "acw-crypto-risk-management/pkg/inputs/riskmgmt"
 	"app-controller/pkg/model"
 	"context"
 	//"encoding/json"
@@ -30,7 +29,13 @@ func (s *service) GetProjectInfo(ctx context.Context, f uint64) ([]model.Project
 }
 
 func (s *service) AddProject(ctx context.Context, f model.Project) error {
-	err := 	s.projectsRepo.Create(ctx,f)
+	prj , err := 	s.projectsRepo.Create(ctx,f)
+
+	if err != nil {
+		return err
+	}
+
+	err = s.kanbanBoardRepo.Create(ctx,prj)
 
 	if err != nil {
 		return err

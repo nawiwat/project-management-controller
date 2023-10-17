@@ -1,4 +1,4 @@
-package Users
+package users
 
 import (
 	"app-controller/pkg/model"

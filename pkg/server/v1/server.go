@@ -5,7 +5,7 @@ import (
 	"app-controller/pkg/migrations"
 	Users "app-controller/pkg/repositories/users"
 	Projects "app-controller/pkg/repositories/projects"
-	// freeze_status "acw-crypto-risk-management/pkg/repositories/freeze_status"
+	KanbanBoard "app-controller/pkg/repositories/kanban"
 	"app-controller/pkg/services/contlr"
 	"net"
 
@@ -116,9 +116,10 @@ func NewServer() (*Server, error) {
 	// repositories
 	UsersRepo := Users.New(db)
 	ProjectsRepo := Projects.New(db)
+	KanbanBoard := KanbanBoard.New(db)
 
 	// services
-	contlrsvc := contlr.NewControllerService(UsersRepo,ProjectsRepo)
+	contlrsvc := contlr.NewControllerService(UsersRepo,ProjectsRepo,KanbanBoard)
 
 	registerHealthCheckRouteV1(s.echo)
 	registerRouterV1(
