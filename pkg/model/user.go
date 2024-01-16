@@ -13,3 +13,12 @@ type User struct {
 	Membership		[]Membership
 }
 
+
+type UserLogin struct {
+	Email         	string			`gorm:"not null" json:"email"`
+	Password       	string			`gorm:"not null" json:"password"`
+}
+
+type UserToken struct {
+	Token         	string			`gorm:"not null" json:"token"`
+}

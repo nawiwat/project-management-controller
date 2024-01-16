@@ -76,3 +76,46 @@ func (r *AppController) AddUser(c echo.Context) error {
 		"message": "success",
 	})
 }
+
+
+func (r *AppController) Login(c echo.Context) error {
+	var usr model.UserLogin
+
+	if err := c.Bind(&usr); err != nil {
+		return err
+	}
+
+	if err := c.Validate(&usr); err != nil {
+		return err
+	}
+
+	var urtoken model.UserToken
+
+	urtoken.Token = "wVYrxaeNa9OxdnULvde1Au5m5w63"
+
+	if usr.Email == "user1@themenate.net" && usr.Password == "2005ipo" {
+		return c.JSON(200, map[string]interface{}{
+			"data": urtoken,
+		})
+	}
+
+	return c.JSON(400, map[string]interface{}{
+		"message": "user_name or password is invalid",
+	})
+}
+
+func (r *AppController) Authentication(c echo.Context) error {
+	var usr model.UserToken
+
+	usr.Token = c.Request().Header.Get("Authorization")
+
+	if usr.Token == "Bearer wVYrxaeNa9OxdnULvde1Au5m5w63" {
+		return c.JSON(200, map[string]interface{}{
+			"message": "success",
+		})
+	}
+
+	return c.JSON(401, map[string]interface{}{
+		"message": "invalid token",
+	})
+}

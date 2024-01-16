@@ -23,6 +23,9 @@ func registerControllerV1(
 ) {
 	h := handlers.NewAppController(controllerService)
 	
+	c.POST("/auth/login",h.Login)
+	c.GET("/auth",h.Authentication)
+
 	c.GET("/users", h.GetUsers)
 	c.GET("/user", h.GetUser)
 	c.POST("/user", h.AddUser)
