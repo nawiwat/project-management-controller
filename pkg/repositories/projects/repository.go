@@ -44,12 +44,12 @@ func (f *projectsRepository) Query(ctx context.Context) ([]model.Project, error)
 	return out, nil
 }
 
-func (f *projectsRepository) QueryInfo(ctx context.Context, P_ID uint64) ([]model.Project, error) {
-	var out []model.Project
-	err := f.db.Preload("KanbanBoard").Preload("Membership.User").Where("id = ?",P_ID).Find(&out).Error
+func (f *projectsRepository) QueryInfo(ctx context.Context, P_ID uint64) (model.Project, error) {
+	var out model.Project
+	err := f.db.Preload("KanbanBoard").Preload("Membership").Where("id = ?",P_ID).Find(&out).Error
 
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to query project")
+		return model.Project{}, errors.Wrap(err, "failed to query project")
 	}
 
 	return out, nil
@@ -58,6 +58,14 @@ func (f *projectsRepository) QueryInfo(ctx context.Context, P_ID uint64) ([]mode
 func (f *projectsRepository) AddMember(ctx context.Context, in model.Membership) (error) {
 	if err := f.db.Create(&in).Error; err != nil {
 		return errors.Wrap(err, "fail to create project")
+	}
+
+	return nil
+}
+
+func (f *projectsRepository) Update(ctx context.Context, in model.Project) (error) {
+	if err := f.db.Updates(&in).Error; err != nil {
+		return errors.Wrap(err, "fail to update project")
 	}
 
 	return nil

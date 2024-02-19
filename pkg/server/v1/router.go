@@ -22,20 +22,26 @@ func registerControllerV1(
 	controllerService contlr.ControllerService,
 ) {
 	h := handlers.NewAppController(controllerService)
-	
-	c.POST("/auth/login",h.Login)
-	c.GET("/auth",h.Authentication)
+    
+	c.POST("/login",h.Login)
+	c.GET("/",h.Authentication)
 
 	c.GET("/users", h.GetUsers)
 	c.GET("/user", h.GetUser)
 	c.POST("/user", h.AddUser)
-
+	c.POST("/user/edit",h.EditUser)
+	c.POST("/user/profile",h.EditProfile)
+	//c.POST("/user/invite",h.UserInvitation)
 
 	c.GET("/projects",h.GetProjects)
 	c.GET("/project",h.GetProjectInfo)
 	c.POST("/project",h.AddProject)
+	c.POST("/project/edit",h.EditProject)
+
 	c.POST("/member",h.AddMember)
+	//c.POST("/projects/invite",h.InviteUser)
+
 
 	c.POST("/column",h.AddBoardColumn)
-	c.GET("/kanban_board",h.GetKanbanBoard)
+
 }

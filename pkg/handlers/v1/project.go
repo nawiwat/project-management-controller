@@ -4,7 +4,7 @@ import (
 	// "encoding/json"
 	// "strings"
 	// "time"
-
+	"app-controller/pkg/middlewares"
 	"github.com/labstack/echo/v4"
 	"app-controller/pkg/errors"
 	"app-controller/pkg/model"
@@ -41,6 +41,11 @@ func (r *AppController) GetProjectInfo(c echo.Context) error {
 }
 
 func (r *AppController) AddProject(c echo.Context) error {
+	user , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
 	var prj model.Project
 
 	if err := c.Bind(&prj); err != nil {
@@ -51,7 +56,7 @@ func (r *AppController) AddProject(c echo.Context) error {
 		return err
 	}
 
-	err := r.controllerService.AddProject(c.Request().Context(), prj)
+	err = r.controllerService.AddProject(c.Request().Context(), prj,user.Username)
 
 	if err != nil {
 		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", prj , err)
@@ -77,6 +82,33 @@ func (r *AppController) AddMember(c echo.Context) error {
 
 	if err != nil {
 		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", mem , err)
+	}
+
+	return c.JSON(200, map[string]interface{}{
+		"message": "success",
+	})
+}
+
+func (r *AppController) EditProject(c echo.Context) error {
+	user , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	var prj model.Project
+
+	if err := c.Bind(&prj); err != nil {
+		return err
+	}
+
+	if err := c.Validate(&prj); err != nil {
+		return err
+	}
+
+	err = r.controllerService.AddProject(c.Request().Context(), prj,user.Username)
+
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", prj , err)
 	}
 
 	return c.JSON(200, map[string]interface{}{

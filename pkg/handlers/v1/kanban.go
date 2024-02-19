@@ -30,25 +30,3 @@ func (r *AppController) AddBoardColumn(c echo.Context) error {
 		"message": "success",
 	})
 }
-
-func (r *AppController) GetKanbanBoard(c echo.Context) error {
-	var kb model.KanbanBoard
-
-	if err := c.Bind(&kb); err != nil {
-		return err
-	}
-	if err := c.Validate(&kb); err != nil {
-		return err
-	}
-
-	println(kb.ProjectID)
-
-	f, err := r.controllerService.GetKanbanBoard(c.Request().Context(),kb.ProjectID)
-
-	if err != nil {
-		return err
-	}
-
-
-	return c.JSON(200, map[string]interface{}{"data": f})
-}

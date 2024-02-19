@@ -26,15 +26,15 @@ func New(db *gorm.DB) repositories.KanbanBoardRepository {
 	}
 }
 
-func (f *kanbanBoardRepository) Create(ctx context.Context, in model.Project) (error) {
-	var kb model.KanbanBoard
-	kb.ProjectID = in.ID
-	if err := f.db.Create(&kb).Error; err != nil {
-		return errors.Wrap(err, "fail to create kanban board")
-	}
+// func (f *kanbanBoardRepository) Create(ctx context.Context, in model.Project) (error) {
+// 	var kb model.KanbanBoard
+// 	kb.ProjectID = in.ID
+// 	if err := f.db.Create(&kb).Error; err != nil {
+// 		return errors.Wrap(err, "fail to create kanban board")
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func (f *kanbanBoardRepository) CreateColumn(ctx context.Context, in model.BoardColumn) (error) {
 	if err := f.db.Create(&in).Error; err != nil {
@@ -44,13 +44,13 @@ func (f *kanbanBoardRepository) CreateColumn(ctx context.Context, in model.Board
 	return nil
 }
 
-func (f *kanbanBoardRepository) Query(ctx context.Context, id uint64) ([]model.KanbanBoard, error) {
-	var out []model.KanbanBoard
-	err := f.db.Preload("Column").Where("project_id = ?", id).Find(&out).Error
+// func (f *kanbanBoardRepository) Query(ctx context.Context, id uint64) ([]model.KanbanBoard, error) {
+// 	var out []model.KanbanBoard
+// 	err := f.db.Preload("Column").Where("project_id = ?", id).Find(&out).Error
 
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to query kanban board")
-	}
+// 	if err != nil {
+// 		return nil, errors.Wrap(err, "failed to query kanban board")
+// 	}
 
-	return out, nil
-}
+// 	return out, nil
+// }
