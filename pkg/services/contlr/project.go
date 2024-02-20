@@ -6,9 +6,8 @@ import (
 	//"encoding/json"
 )
 
-func (s *service) GetProjects(ctx context.Context) ([]model.Project, error) {
-
-	out, err := s.projectsRepo.Query(ctx)
+func (s *service) GetProjects(ctx context.Context, u string) ([]model.Project, error) {
+	out, err := s.projectsRepo.Query(ctx, u)
 
 	if err != nil {
 		return []model.Project{}, err
@@ -42,8 +41,8 @@ func (s *service) AddProject(ctx context.Context, f model.Project, u string) err
 	}
 
 	pjOwner := model.Membership{
-		ProjectID: prj.ID,
-		UserID:    usr.ID,
+		ProjectId: prj.ID,
+		UserId:    usr.ID,
 		Username:  usr.Username,
 		Role:      "Owner",
 	}

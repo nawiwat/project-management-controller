@@ -1,26 +1,26 @@
-package kanban
+package tasks
 
 
 import (
-	"app-controller/pkg/model"
+	//"app-controller/pkg/model"
 	"app-controller/pkg/repositories"
 	"time"
 
 	"gorm.io/gorm"
 
-	"context"
+	//"context"
 
-	"github.com/pkg/errors"
+	//"github.com/pkg/errors"
 )
 
-type kanbanBoardRepository struct {
+type tasksRepository struct {
 	db  *gorm.DB
 	loc *time.Location
 }
 
-func New(db *gorm.DB) repositories.KanbanBoardRepository {
+func New(db *gorm.DB) repositories.TasksRepository {
 	loc, _ := time.LoadLocation("Asia/Bangkok")
-	return &kanbanBoardRepository{
+	return &tasksRepository{
 		db,
 		loc,
 	}
@@ -36,13 +36,13 @@ func New(db *gorm.DB) repositories.KanbanBoardRepository {
 // 	return nil
 // }
 
-func (f *kanbanBoardRepository) CreateColumn(ctx context.Context, in model.BoardColumn) (error) {
-	if err := f.db.Create(&in).Error; err != nil {
-		return errors.Wrap(err, "fail to create kanban board")
-	}
+// func (f *kanbanBoardRepository) CreateColumn(ctx context.Context, in model.BoardColumn) (error) {
+// 	if err := f.db.Create(&in).Error; err != nil {
+// 		return errors.Wrap(err, "fail to create kanban board")
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 // func (f *kanbanBoardRepository) Query(ctx context.Context, id uint64) ([]model.KanbanBoard, error) {
 // 	var out []model.KanbanBoard

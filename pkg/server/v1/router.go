@@ -42,6 +42,6 @@ func registerControllerV1(
 	//c.POST("/projects/invite",h.InviteUser)
 
 
-	c.POST("/column",h.AddBoardColumn)
+	//c.POST("/column",h.AddBoardColumn)
 
 }

@@ -62,7 +62,7 @@ func (f *usersRepository) Query(ctx context.Context) ([]model.User, error) {
 
 func (f *usersRepository) QueryInfo(ctx context.Context,username string) (model.User, error) {
 	var out model.User
-	err := f.db.Preload("Membership.Project").Preload("Notification").Preload("Attachment").Where("username = ?",username).Find(&out).Error
+	err := f.db.Preload("Membership").Preload("Notification").Preload("Attachment").Where("username = ?",username).Find(&out).Error
 
 	if err != nil {
 		return model.User{}, errors.Wrap(err, "failed to query users")

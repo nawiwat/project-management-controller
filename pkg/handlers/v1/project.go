@@ -11,7 +11,12 @@ import (
 )
 
 func (r *AppController) GetProjects(c echo.Context) error {
-	f, err := r.controllerService.GetProjects(c.Request().Context())
+	usr , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	f, err := r.controllerService.GetProjects(c.Request().Context(),usr.Username)
 
 	if err != nil {
 		return err
@@ -21,16 +26,20 @@ func (r *AppController) GetProjects(c echo.Context) error {
 }
 
 func (r *AppController) GetProjectInfo(c echo.Context) error {
-	var fr model.Project
-
-	if err := c.Bind(&fr); err != nil {
+	_ , err := middlewares.Auth(c)
+	if err != nil {
 		return err
 	}
-	if err := c.Validate(&fr); err != nil {
+	var pj model.Project
+
+	if err := c.Bind(&pj); err != nil {
+		return err
+	}
+	if err := c.Validate(&pj); err != nil {
 		return err
 	}
 
-	f, err := r.controllerService.GetProjectInfo(c.Request().Context(),fr.ID)
+	f, err := r.controllerService.GetProjectInfo(c.Request().Context(),pj.ID)
 
 	if err != nil {
 		return err
@@ -90,7 +99,7 @@ func (r *AppController) AddMember(c echo.Context) error {
 }
 
 func (r *AppController) EditProject(c echo.Context) error {
-	user , err := middlewares.Auth(c)
+	_ , err := middlewares.Auth(c)
 	if err != nil {
 		return err
 	}
@@ -105,7 +114,7 @@ func (r *AppController) EditProject(c echo.Context) error {
 		return err
 	}
 
-	err = r.controllerService.AddProject(c.Request().Context(), prj,user.Username)
+	err = r.controllerService.EditProject(c.Request().Context(), prj)
 
 	if err != nil {
 		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", prj , err)

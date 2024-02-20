@@ -5,7 +5,7 @@ import (
 	"app-controller/pkg/migrations"
 	Users "app-controller/pkg/repositories/users"
 	Projects "app-controller/pkg/repositories/projects"
-	KanbanBoard "app-controller/pkg/repositories/kanban"
+	Tasks "app-controller/pkg/repositories/tasks"
 	"app-controller/pkg/services/contlr"
 	"net"
 
@@ -116,10 +116,10 @@ func NewServer() (*Server, error) {
 	// repositories
 	UsersRepo := Users.New(db)
 	ProjectsRepo := Projects.New(db)
-	KanbanBoard := KanbanBoard.New(db)
+	TasksRepo := Tasks.New(db)
 
 	// services
-	contlrsvc := contlr.NewControllerService(UsersRepo,ProjectsRepo,KanbanBoard)
+	contlrsvc := contlr.NewControllerService(UsersRepo,ProjectsRepo,TasksRepo)
 
 	registerHealthCheckRouteV1(s.echo)
 	registerRouterV1(

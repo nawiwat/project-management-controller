@@ -19,16 +19,19 @@ type User struct {
 	Attachment   ProfileAttachment      `gorm:"constraint:OnUpdate:CASCADE" json:"attachment"`
 	Membership   []Membership			`json:"membership"`
 	Notification []Notification			`json:"notification"`
+	TaskMember	 []TaskMember			`json:"task"`
 }
 
 type Notification struct {
 	ID          	uint64 `gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
-	UserID      	uint64 `json:"user_id"`
+	UserId      	uint64 `json:"user_id"`
 	SendBy			string `gorm:"not null" json:"send_by"`
 	Type        	string `gorm:"not null" json:"type"`
 	Description 	string `gorm:"not null" json:"description"`
 	InviteId    	uint64 `json:"invite_id"`
-	TaskId			uint64 `json:"task_id"`
+	Invitation		Invitation `gorm:"foreignKey:InviteId;references:ID" json:"invitation"`
+	TaskId			uint64 		`json:"task_id"`
+	Task			Task 		`gorm:"foreignKey:TaskId;references:ID" json:"task"`
 	Date			time.Time   	`gorm:"type:timestamp;autoCreateTime:true" json:"date"`
 }
 

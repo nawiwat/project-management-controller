@@ -9,14 +9,20 @@ import (
 // Migrate to migrate DB
 func Migrate(db *gorm.DB) error {
 	if err := db.AutoMigrate(
-		&model.User{},
-		&model.Membership{},
-		&model.Project{},
-		&model.Notification{},
-		&model.ProfileAttachment{},
-		&model.BoardColumn{},
-		&model.Invitation{},
 		&model.UserToken{},
+
+		&model.User{},
+		&model.ProfileAttachment{},
+		&model.Notification{},
+		
+		&model.Project{},
+		&model.Membership{},
+		&model.Invitation{},
+		
+		&model.Task{},
+		&model.Attachment{},
+		&model.Comment{},
+		&model.KanbanColumn{},
 	); err != nil {
 		return err
 	}

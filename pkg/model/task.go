@@ -2,27 +2,30 @@ package model
 
 type Task struct {
 	ID           	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
-	ProjectID		uint64			`gorm:"not null" query:"project_id"`
+	ProjectId		uint64			`gorm:"not null" query:"project_id"`
 	Name         	string 			`gorm:"not null" json:"name"`
 	Description  	string 			`gorm:"not null" json:"description"`
 	StartDate    	string 			`gorm:"not null" json:"start_date"`
 	EndDate       	string 			`gorm:"not null" json:"end_date"`
-	Members			[]string		`gorm:"not null" json:"member"`
-	Labels			[]string		`gorm:"not null" json:"labels"`
-	Attachments		[]Attachment	`gorm:"not null" json:"attachments"`
-
+	Members			[]TaskMember	`json:"member"`
+	Attachments		[]Attachment	`json:"attachments"`
+	Comments		[]Comment		`json:"comments"`
 	DueDate			string 			`gorm:"not null" json:"due_date"`
-	
-	Kanban			KanbanColumn		`json:"kanban"`
-	Membership   	[]Membership		`gorm:"foreignKey:UserID;references:ID" json:"membership"`
-	Notification 	[]Notification		`gorm:"foreignKey:UserID;references:ID" json:"notification"`
+	KanbanId		uint64			`json:"kanban_id"`
+	Kanban			KanbanColumn	`gorm:"foreignKey:KanbanId;references:ID" json:"kanban"`
+}
+
+type TaskMember struct {
+	ID				uint64			`gorm:"primarykey,not null;autoIncrement:true;unique" query:"id"`
+	TaskId			uint64 			`json:"task_id"`
+	UserId	     	uint64 			`json:"user_id"`
+	Username		string			`json:"username"`
 }
 
 type KanbanColumn struct {
 	ID          uint64 		`gorm:"primarykey,not null;autoIncrement:true;unique" query:"id"`
-	ProjectId   uint64		`gorm:"not null"`
 	Column 		string		`json:"column"`
-	Position 	string		`json:"position"`
+	Position 	uint64		`json:"position"`
 }
 
 type Attachment struct {
