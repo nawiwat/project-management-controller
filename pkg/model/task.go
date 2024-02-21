@@ -11,8 +11,7 @@ type Task struct {
 	Attachments		[]Attachment	`json:"attachments"`
 	Comments		[]Comment		`json:"comments"`
 	DueDate			string 			`gorm:"not null" json:"due_date"`
-	KanbanId		uint64			`json:"kanban_id"`
-	Kanban			KanbanColumn	`gorm:"foreignKey:KanbanId;references:ID" json:"kanban"`
+	Kanban			KanbanColumn	`json:"kanban"`
 }
 
 type TaskMember struct {
@@ -23,24 +22,25 @@ type TaskMember struct {
 }
 
 type KanbanColumn struct {
-	ID          uint64 		`gorm:"primarykey,not null;autoIncrement:true;unique" query:"id"`
-	Column 		string		`json:"column"`
-	Position 	uint64		`json:"position"`
+	ID          	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" query:"id"`
+	TaskId			uint64 			`json:"task_id"`
+	Column 			string			`json:"column"`
+	Position 		uint64			`json:"position"`
 }
 
 type Attachment struct {
-	ID          uint64 		`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
-	TaskId		uint64		`gorm:"not null" query:"task_id"`
-	Name		string		`gorm:"not null" json:"name"`
-	Src			string		`gorm:"not null" json:"src"`
-	Size		string		`gorm:"not null" json:"size"`
+	ID          	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
+	TaskId			uint64			`gorm:"not null" query:"task_id"`
+	Name			string			`gorm:"not null" json:"name"`
+	Src				string			`gorm:"not null" json:"src"`
+	Size			string			`gorm:"not null" json:"size"`
 }
 
 type Comment struct {
-	ID          uint64 		`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
-	TaskId		uint64		`gorm:"not null" query:"task_id"`
-	Name		string		`gorm:"not null" json:"name"`
-	Src			string		`gorm:"not null" json:"src"`
-	Message		string		`gorm:"not null" json:"message"`
-	Date		string		`gorm:"not null" json:"date"`
+	ID          	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
+	TaskId			uint64			`gorm:"not null" query:"task_id"`
+	Name			string			`gorm:"not null" json:"name"`
+	Src				string			`gorm:"not null" json:"src"`
+	Message			string			`gorm:"not null" json:"message"`
+	Date			string			`gorm:"not null" json:"date"`
 }
