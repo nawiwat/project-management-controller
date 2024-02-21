@@ -34,7 +34,7 @@ func (s *service) GetUser(ctx context.Context,u string) (model.User, error) {
 	return out, err
 }
 
-func (s *service) AddUser(ctx context.Context, f model.User) error {
+func (s *service) AddUser(ctx context.Context, f model.User) (string,error) {
 	err := 	s.usersRepo.Create(ctx, model.User{
 			Username:   	f.Username,
 			Password:   	f.Password,
@@ -47,11 +47,29 @@ func (s *service) AddUser(ctx context.Context, f model.User) error {
 			Attachment:     f.Attachment,
 	})
 
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := model.UserToken{
+		Username: f.Username,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		},
+	}
+	token.Claims = claims
+
+	tokenString, err := token.SignedString([]byte("notdoingthatnowlol"))
 	if err != nil {
-		return err
+		return "" , err
 	}
 
-	return nil
+	if err := 	s.usersRepo.CreateToken(ctx,claims); err != nil {
+		return "" , errors.New("fail to create token")
+	}
+
+	if err != nil {
+		return "",err
+	}
+
+	return tokenString , nil
 }
 
 func (s *service) Login(ctx context.Context, f model.UserLogin) (string,error) {

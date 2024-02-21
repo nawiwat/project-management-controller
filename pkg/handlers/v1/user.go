@@ -74,14 +74,14 @@ func (r *AppController) AddUser(c echo.Context) error {
 	hashedPasswordString := base64.StdEncoding.EncodeToString(hashedPassword)
 	usr.Password = hashedPasswordString
 
-	err = r.controllerService.AddUser(c.Request().Context(), usr)
+	token , err := r.controllerService.AddUser(c.Request().Context(), usr)
 
 	if err != nil {
 		return errors.NewError(echo.ErrBadRequest.Code, errors.ErrBadRequest, err.Error(),nil,err)
 	}
 
 	return c.JSON(200, map[string]interface{}{
-		"message": "success",
+		"token": token,
 	})
 }
 

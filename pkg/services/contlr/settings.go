@@ -10,7 +10,7 @@ import (
 type ControllerService interface {
 	GetUsers(ctx context.Context) ([]model.User, error)
 	GetUser(ctx context.Context, u string) (model.User, error)
-	AddUser(ctx context.Context, f model.User) error
+	AddUser(ctx context.Context, f model.User) (string , error)
 	EditUser(ctx context.Context, f model.User, u string) error
 	EditProfile(ctx context.Context, f model.ProfileAttachment, u string) error
 	Login(ctx context.Context, f model.UserLogin) (string, error)
