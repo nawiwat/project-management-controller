@@ -11,4 +11,5 @@ type  ProjectsRepository interface {
 	AddMember(ctx context.Context, in model.Membership) (error)
 	Query(ctx context.Context, u string) ([]model.Project, error)
 	QueryInfo(ctx context.Context, f uint64) (model.Project, error)
+	Delete(ctx context.Context, in uint64) (error)
 }

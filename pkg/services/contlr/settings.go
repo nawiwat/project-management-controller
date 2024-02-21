@@ -20,6 +20,7 @@ type ControllerService interface {
 	GetProjectInfo(ctx context.Context, f uint64) (model.Project, error)
 	AddProject(ctx context.Context, f model.Project, u string) error
 	EditProject(ctx context.Context, f model.Project) error
+	DeleteProject(ctx context.Context, f uint64) error
 	AddMember(ctx context.Context, f model.Membership) error
 
 	//AddBoardColumn(ctx context.Context, f model.BoardColumn) error

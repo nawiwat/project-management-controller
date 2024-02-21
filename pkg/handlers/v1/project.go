@@ -124,3 +124,30 @@ func (r *AppController) EditProject(c echo.Context) error {
 		"message": "success",
 	})
 }
+
+func (r *AppController) DeleteProject(c echo.Context) error {
+	_ , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	var prj model.Project
+
+	if err := c.Bind(&prj); err != nil {
+		return err
+	}
+
+	if err := c.Validate(&prj); err != nil {
+		return err
+	}
+
+	err = r.controllerService.DeleteProject(c.Request().Context(), prj.ID)
+
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", nil , err)
+	}
+
+	return c.JSON(200, map[string]interface{}{
+		"message": "success",
+	})
+}

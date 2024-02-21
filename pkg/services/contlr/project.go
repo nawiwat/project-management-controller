@@ -83,3 +83,13 @@ func (s *service) EditProject(ctx context.Context, f model.Project) error {
 
 	return nil
 }
+
+func (s *service) DeleteProject(ctx context.Context, f uint64) error {
+	err := 	s.projectsRepo.Delete(ctx,f)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -89,3 +89,12 @@ func (f *projectsRepository) Update(ctx context.Context, in model.Project) (erro
 
 	return nil
 }
+
+func (f *projectsRepository) Delete(ctx context.Context, in uint64) (error) {
+	var mem []model.Membership
+	if err := f.db.Where("project_id = ?",in).Delete(&mem).Error; err != nil {
+		return errors.Wrap(err, "fail to delete project")
+	}
+
+	return nil
+}
