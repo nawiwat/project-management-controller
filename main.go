@@ -32,4 +32,6 @@ func main() {
 	<-stop
 
 	logger.Printf("Shutting down server")
+	
+	logrus.Exit(0)
 }
