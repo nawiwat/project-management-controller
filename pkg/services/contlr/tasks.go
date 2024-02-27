@@ -1,17 +1,37 @@
 package contlr
 
-// import (
-// 	"app-controller/pkg/model"
-// 	"context"
-// 	//"encoding/json"
-// )
+import (
+	"app-controller/pkg/model"
+	"context"
+	//"encoding/json"
+)
 
-// func (s *service) AddBoardColumn(ctx context.Context, f model.BoardColumn) error {
-// 	err := s.kanbanBoardRepo.CreateColumn(ctx,f)
+func (s *service) CreateTask(ctx context.Context, t model.Task) ([]model.Task,error) {
+	tsk , err := s.tasksRepo.Create(ctx,t)
 
-// 	if err != nil {
-// 		return err
-// 	}
+	if err != nil {
+		return nil , err
+	}
 
-// 	return nil
-// }
+	return tsk , nil
+}
+
+func (s *service) GetTask(ctx context.Context, id uint64) ([]model.Task,error) {
+	tsk , err := s.tasksRepo.Query(ctx,id)
+
+	if err != nil {
+		return nil , err
+	}
+
+	return tsk , nil
+}
+
+func (s *service) UpdateTask(ctx context.Context, t []model.Task) ([]model.Task,error) {
+	tsk , err := s.tasksRepo.Update(ctx,t)
+
+	if err != nil {
+		return nil , err
+	}
+
+	return tsk , nil
+}

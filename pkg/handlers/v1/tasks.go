@@ -5,19 +5,18 @@ import (
 	// "strings"
 	// "time"
 
-	//"app-controller/pkg/errors"
+	"app-controller/pkg/errors"
 	"app-controller/pkg/middlewares"
 	"app-controller/pkg/model"
 
 	"github.com/labstack/echo/v4"
 )
 
-func (r *AppController) EditTask(c echo.Context) error {
+func (r *AppController) CreateTask (c echo.Context) error {
 	_ , err := middlewares.Auth(c)
 	if err != nil {
 		return err
 	}
-
 
 	var tsk model.Task
 	if err := c.Bind(&tsk); err != nil {
@@ -27,14 +26,58 @@ func (r *AppController) EditTask(c echo.Context) error {
 		return err
 	}
 
+	out , err := r.controllerService.CreateTask(c.Request().Context(), tsk)
 
-	//err := r.controllerService.AddBoardColumn(c.Request().Context(), col)
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", nil , err)
+	}
 
-	// if err != nil {
-	// 	return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", col , err)
+	return c.JSON(200, map[string]interface{}{"data": out})
+}
+
+func (r *AppController) GetTask (c echo.Context) error {
+	_ , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	var tsk model.Task
+	if err := c.Bind(&tsk); err != nil {
+		return err
+	}
+	if err := c.Validate(&tsk); err != nil {
+		return err
+	}
+
+	out , err := r.controllerService.GetTask(c.Request().Context(), tsk.ProjectId)
+
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", nil , err)
+	}
+
+	return c.JSON(200, map[string]interface{}{"data": out})
+}
+
+func (r *AppController) UpdateTask(c echo.Context) error {
+	_ , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	var tsk []model.Task
+	if err := c.Bind(&tsk); err != nil {
+		return err
+	}
+
+	// if err := c.Validate(&tsk); err != nil {
+	// 	return err
 	// }
 
-	return c.JSON(200, map[string]interface{}{
-		"message": "success",
-	})
+	out , err := r.controllerService.UpdateTask(c.Request().Context(), tsk)
+
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", nil , err)
+	}
+
+	return c.JSON(200, map[string]interface{}{"data": out})
 }

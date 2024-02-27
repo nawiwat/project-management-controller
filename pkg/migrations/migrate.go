@@ -20,6 +20,7 @@ func Migrate(db *gorm.DB) error {
 		&model.Invitation{},
 		
 		&model.Task{},
+		&model.TaskMember{},
 		&model.Attachment{},
 		&model.Comment{},
 		&model.KanbanColumn{},

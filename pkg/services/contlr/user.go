@@ -47,6 +47,10 @@ func (s *service) AddUser(ctx context.Context, f model.User) (string,error) {
 			Attachment:     f.Attachment,
 	})
 
+	if err != nil {
+		return "",err
+	}
+
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := model.UserToken{
 		Username: f.Username,

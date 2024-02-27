@@ -2,15 +2,15 @@ package tasks
 
 
 import (
-	//"app-controller/pkg/model"
+	"app-controller/pkg/model"
 	"app-controller/pkg/repositories"
 	"time"
 
 	"gorm.io/gorm"
 
-	//"context"
+	"context"
 
-	//"github.com/pkg/errors"
+	"github.com/pkg/errors"
 )
 
 type tasksRepository struct {
@@ -26,31 +26,63 @@ func New(db *gorm.DB) repositories.TasksRepository {
 	}
 }
 
-// func (f *kanbanBoardRepository) Create(ctx context.Context, in model.Project) (error) {
-// 	var kb model.KanbanBoard
-// 	kb.ProjectID = in.ID
-// 	if err := f.db.Create(&kb).Error; err != nil {
-// 		return errors.Wrap(err, "fail to create kanban board")
-// 	}
+func (f *tasksRepository) Create(ctx context.Context, in model.Task ) ([]model.Task , error) {
+	var out []model.Task
+	
+	if err := f.db.Create(&in).Error; err != nil {
+		return nil , errors.Wrap(err, "fail to create task")
+	}
 
-// 	return nil
-// }
+	err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Preload("Kanban").Where("project_id = ?", in.ProjectId).Find(&out).Error
 
-// func (f *kanbanBoardRepository) CreateColumn(ctx context.Context, in model.BoardColumn) (error) {
-// 	if err := f.db.Create(&in).Error; err != nil {
-// 		return errors.Wrap(err, "fail to create kanban board")
-// 	}
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query task")
+	}
 
-// 	return nil
-// }
+	return out , nil
+}
 
-// func (f *kanbanBoardRepository) Query(ctx context.Context, id uint64) ([]model.KanbanBoard, error) {
-// 	var out []model.KanbanBoard
-// 	err := f.db.Preload("Column").Where("project_id = ?", id).Find(&out).Error
+func (f *tasksRepository) Query(ctx context.Context, id uint64 ) ([]model.Task , error) {
+	var out []model.Task
 
-// 	if err != nil {
-// 		return nil, errors.Wrap(err, "failed to query kanban board")
-// 	}
+	err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Preload("Kanban").Where("project_id = ?", id).Find(&out).Error
 
-// 	return out, nil
-// }
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query task")
+	}
+
+	return out , nil
+}
+
+func (f *tasksRepository) Update(ctx context.Context, in []model.Task ) ([]model.Task , error) {
+	var out []model.Task
+	for _,r := range(in) {
+		if err := f.db.Updates(&r).Error; err != nil {
+			return nil , errors.Wrap(err, "fail to update task")
+		}
+		for _,n := range(r.Attachments) {
+			if err := f.db.Updates(n).Error; err != nil {
+				return nil , errors.Wrap(err, "fail to update attachments")
+			}
+		}
+		for _,n := range(r.Members) {
+			if err := f.db.Updates(n).Error; err != nil {
+				return nil , errors.Wrap(err, "fail to update members")
+			}
+		}
+		for _,n := range(r.Comments) {
+			if err := f.db.Updates(n).Error; err != nil {
+				return nil , errors.Wrap(err, "fail to update comments")
+			}
+		}
+	}
+	
+
+	err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Preload("Kanban").Where("project_id = ?", in[0].ProjectId).Find(&out).Error
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query task")
+	}
+
+	return out , nil
+}

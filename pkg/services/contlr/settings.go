@@ -23,6 +23,9 @@ type ControllerService interface {
 	DeleteProject(ctx context.Context, f uint64) error
 	AddMember(ctx context.Context, f model.Membership) error
 
+	CreateTask(ctx context.Context, t model.Task) ([]model.Task,error)
+	UpdateTask(ctx context.Context, t []model.Task) ([]model.Task,error)
+	GetTask(ctx context.Context, id uint64) ([]model.Task,error)
 	//AddBoardColumn(ctx context.Context, f model.BoardColumn) error
 	
 }

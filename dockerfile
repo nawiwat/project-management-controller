@@ -8,3 +8,4 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 COPY --from=builder /work/app /
 CMD ["/app"]
+EXPOSE 8001

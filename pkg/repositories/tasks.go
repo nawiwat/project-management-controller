@@ -1,12 +1,12 @@
 package repositories
 
-// import (
-// 	"app-controller/pkg/model"
-// 	"context"
-// )
+import (
+	"app-controller/pkg/model"
+	"context"
+)
 
 type  TasksRepository interface {
-	//Create(ctx context.Context, in model.Project) (error)
-	//CreateColumn(ctx context.Context, in model.BoardColumn) (error)
-	//Query(ctx context.Context, id uint64) ([]model.KanbanBoard, error)
+	Create(ctx context.Context, in model.Task ) ([]model.Task , error)
+	Query(ctx context.Context, id uint64 ) ([]model.Task , error)
+	Update(ctx context.Context, in []model.Task ) ([]model.Task , error)
 }
