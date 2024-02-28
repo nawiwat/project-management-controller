@@ -2,7 +2,7 @@ package model
 
 type Task struct {
 	ID           	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
-	ProjectId		uint64			`gorm:"not null" json:"project_id"`
+	ProjectId		uint64			`gorm:"not null" json:"project_id" query:"project_id"`
 	Name         	string 			`gorm:"not null" json:"name"`
 	Description  	string 			`gorm:"not null" json:"description"`
 	StartDate    	string 			`gorm:"not null" json:"start_date"`
