@@ -56,23 +56,75 @@ func (f *tasksRepository) Query(ctx context.Context, id uint64 ) ([]model.Task ,
 
 func (f *tasksRepository) Update(ctx context.Context, in []model.Task ) ([]model.Task , error) {
 	var out []model.Task
+	var cur_task model.Task
 	for _,r := range(in) {
 		if err := f.db.Updates(&r).Error; err != nil {
 			return nil , errors.Wrap(err, "fail to update task")
 		}
+		if err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Where("id = ?", r.ID).Find(&cur_task).Error; err != nil {
+			return nil , errors.Wrap(err, "fail to find taskmember")
+		}
+
 		for _,n := range(r.Attachments) {
 			if err := f.db.Updates(n).Error; err != nil {
 				return nil , errors.Wrap(err, "fail to update attachments")
 			}
 		}
+		
 		for _,n := range(r.Members) {
 			if err := f.db.Updates(n).Error; err != nil {
 				return nil , errors.Wrap(err, "fail to update members")
 			}
 		}
+
 		for _,n := range(r.Comments) {
 			if err := f.db.Updates(n).Error; err != nil {
 				return nil , errors.Wrap(err, "fail to update comments")
+			}
+		}
+
+		for _, oldAttachment := range cur_task.Attachments {
+			found := false
+			for _, newAttachment := range r.Attachments {
+				if oldAttachment.ID == newAttachment.ID {
+					found = true
+					break
+				}
+			}
+			if !found {
+				if err := f.db.Delete(&oldAttachment).Error; err != nil {
+					return nil, errors.Wrap(err, "fail to delete old attachment")
+				}
+			}
+		}
+
+		for _, oldMember := range cur_task.Members {
+			found := false
+			for _, newMember := range r.Members {
+				if oldMember.ID == newMember.ID {
+					found = true
+					break
+				}
+			}
+			if !found {
+				if err := f.db.Delete(&oldMember).Error; err != nil {
+					return nil, errors.Wrap(err, "fail to delete old member")
+				}
+			}
+		}
+
+		for _, oldComment := range cur_task.Comments {
+			found := false
+			for _, newComment := range r.Comments {
+				if oldComment.ID == newComment.ID {
+					found = true
+					break
+				}
+			}
+			if !found {
+				if err := f.db.Delete(&oldComment).Error; err != nil {
+					return nil, errors.Wrap(err, "fail to delete old comment")
+				}
 			}
 		}
 	}
