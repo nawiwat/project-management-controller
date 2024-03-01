@@ -12,4 +12,7 @@ type  ProjectsRepository interface {
 	Query(ctx context.Context, u string) ([]model.Project, error)
 	QueryInfo(ctx context.Context, f uint64) (model.Project, error)
 	Delete(ctx context.Context, in uint64) (error)
+	CreateInvite(ctx context.Context, in model.Invitation) (uint64 , error)
+	DeleteInvite(ctx context.Context, in model.Invitation) (error)
+    GetInvite(ctx context.Context, in uint64) (model.Invitation , error)
 }

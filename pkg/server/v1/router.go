@@ -39,7 +39,8 @@ func registerControllerV1(
 	c.POST("/project/edit",h.EditProject)
 	c.DELETE("/project",h.DeleteProject)
 
-	c.POST("/member",h.AddMember)
+	c.POST("/invite",h.InviteMember)
+	c.POST("/invite/response",h.InviteResponse)
 
 	c.POST("/task",h.CreateTask)
 	c.POST("/task/update",h.UpdateTask)

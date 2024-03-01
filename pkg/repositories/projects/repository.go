@@ -65,7 +65,7 @@ func (f *projectsRepository) Query(ctx context.Context, u string) ([]model.Proje
 
 func (f *projectsRepository) QueryInfo(ctx context.Context, pid uint64) (model.Project, error) {
 	var out model.Project
-	err := f.db.Preload("Task").Preload("Membership").Where("id = ?",pid).Find(&out).Error
+	err := f.db.Preload("Task").Preload("Membership").Preload("Invitation").Where("id = ?",pid).Find(&out).Error
 
 	if err != nil {
 		return model.Project{}, errors.Wrap(err, "failed to query project")
@@ -97,4 +97,54 @@ func (f *projectsRepository) Delete(ctx context.Context, in uint64) (error) {
 	}
 
 	return nil
+}
+
+func (f *projectsRepository) CreateInvite(ctx context.Context, in model.Invitation) (uint64 , error) {
+	var mem []model.Membership
+	var inv model.Invitation
+
+	err := f.db.Where("project_id = ?",in.ProjectId).Find(&mem).Error
+
+	if err != nil {
+		return 0 , errors.Wrap(err, "failed to query membership")
+	}
+
+	for _,r := range(mem){
+		if in.UserId == r.UserId {
+			return 0 , errors.New("user already in the project")
+		}
+	}
+
+	rf := f.db.Where("user_id = ?",in.UserId).Where("project_id = ?",in.ProjectId).Find(&inv).RowsAffected
+	if rf != 0 {
+		return 0 , errors.New("invite already exist")
+	}
+
+	if err := f.db.Create(&in).Error; err != nil {
+		return 0 , errors.Wrap(err, "fail to create invitation")
+	}
+
+	if err := f.db.Where("user_id = ?",in.UserId).Where("project_id = ?",in.ProjectId).Find(&inv).Error; err != nil {
+		return 0 , errors.Wrap(err, "fail to get invitation")
+	}
+
+
+	return inv.ID , nil
+}
+
+func (f *projectsRepository) DeleteInvite(ctx context.Context, in model.Invitation) (error) {
+	if err := f.db.Delete(&in).Error; err != nil {
+		return errors.Wrap(err, "fail to delete old invitation")
+	}
+	return nil
+}
+
+func (f *projectsRepository) GetInvite(ctx context.Context, in uint64) (model.Invitation , error) {
+	var inv model.Invitation
+	usrInvl := f.db.Where("id = ?",in).Find(&inv).RowsAffected
+	if usrInvl == 0 {
+		return model.Invitation{}, errors.New("invalid invitation")
+	}
+
+	return inv , nil
 }

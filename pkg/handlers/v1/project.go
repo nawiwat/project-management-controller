@@ -76,21 +76,28 @@ func (r *AppController) AddProject(c echo.Context) error {
 	})
 }
 
-func (r *AppController) AddMember(c echo.Context) error {
-	var mem model.Membership
+func (r *AppController) InviteMember(c echo.Context) error {
+	user , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+	
+	var inv model.InviteReq
 
-	if err := c.Bind(&mem); err != nil {
+	if err := c.Bind(&inv); err != nil {
 		return err
 	}
 
-	if err := c.Validate(&mem); err != nil {
+	if err := c.Validate(&inv); err != nil {
 		return err
 	}
 
-	err := r.controllerService.AddMember(c.Request().Context(), mem)
+	inv.Sender = user.Username
+
+	err = r.controllerService.InviteMember(c.Request().Context(), inv)
 
 	if err != nil {
-		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", mem , err)
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", err.Error() , err)
 	}
 
 	return c.JSON(200, map[string]interface{}{
@@ -151,3 +158,4 @@ func (r *AppController) DeleteProject(c echo.Context) error {
 		"message": "success",
 	})
 }
+

@@ -21,7 +21,8 @@ type ControllerService interface {
 	AddProject(ctx context.Context, f model.Project, u string) error
 	EditProject(ctx context.Context, f model.Project) error
 	DeleteProject(ctx context.Context, f uint64) error
-	AddMember(ctx context.Context, f model.Membership) error
+	InviteMember(ctx context.Context, f model.InviteReq) error
+	InviteResponse(ctx context.Context, f model.InviteResponse) error
 
 	CreateTask(ctx context.Context, t model.Task) ([]model.Task,error)
 	UpdateTask(ctx context.Context, t []model.Task) ([]model.Task,error)

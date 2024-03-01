@@ -135,3 +135,26 @@ func (f *usersRepository) UpdateProfile(ctx context.Context, in model.ProfileAtt
 	}
 	return nil
 }
+
+func (f *usersRepository) CreateNotification(ctx context.Context, in model.Notification) (error) {
+	if err := f.db.Create(&in).Error; err != nil {
+		return errors.Wrap(err, "fail to create notification")
+	}
+	return nil
+}
+
+func (f *usersRepository) GetNotification(ctx context.Context, in uint64) (model.Notification , error) {
+	var out model.Notification
+	usrInvl := f.db.Where("id = ?",in).Find(&out).RowsAffected
+	if usrInvl == 0 {
+		return model.Notification{} , errors.New("invalid notification")
+	}
+	return out , nil
+}
+
+func (f *usersRepository) DeleteNotification(ctx context.Context, in model.Notification) (error) {
+	if err := f.db.Delete(&in).Error; err != nil {
+		return errors.Wrap(err, "fail to delete old notification")
+	}
+	return  nil
+}

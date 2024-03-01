@@ -55,9 +55,23 @@ func (s *service) AddProject(ctx context.Context, f model.Project, u string) err
 	return nil
 }
 
-func (s *service) AddMember(ctx context.Context, f model.Membership) error {
-	err := 	s.projectsRepo.AddMember(ctx,f)
+func (s *service) InviteMember(ctx context.Context, f model.InviteReq) error {
+	inv_id , err := 	s.projectsRepo.CreateInvite(ctx, model.Invitation{
+			UserId: 		f.UserId,
+			ProjectId: 		f.ProjectId,
+			Status:			"pending",	
+	})	
+	if err != nil {
+		return err
+	}
 
+	err = 	s.usersRepo.CreateNotification(ctx, model.Notification{
+			UserId: 		f.UserId,
+			SendBy: 		f.Sender,	
+			Type: 			"invitation",
+			InviteId: 		inv_id,
+			Description:	f.Sender + " invited you to project",	
+	})	
 	if err != nil {
 		return err
 	}

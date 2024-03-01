@@ -195,3 +195,31 @@ func (r *AppController) EditProfile(c echo.Context) error {
 		"message": "success",
 	})
 }
+
+func (r *AppController) InviteResponse(c echo.Context) error {
+	usr , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	var rsp model.InviteResponse
+
+	if err := c.Bind(&rsp); err != nil {
+		return err
+	}
+	if err := c.Validate(&rsp); err != nil {
+		return err
+	}
+	
+	rsp.Respondent = usr.Username
+
+	err = r.controllerService.InviteResponse(c.Request().Context(), rsp)
+
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", err.Error() , err)
+	}
+
+	return c.JSON(200, map[string]interface{}{
+		"message": "success",
+	})
+}

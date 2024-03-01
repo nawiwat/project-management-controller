@@ -29,9 +29,7 @@ type Notification struct {
 	Type        	string `gorm:"not null" json:"type"`
 	Description 	string `gorm:"not null" json:"description"`
 	InviteId    	uint64 `json:"invite_id"`
-	Invitation		Invitation `gorm:"foreignKey:InviteId;references:ID" json:"invitation"`
 	TaskId			uint64 		`json:"task_id"`
-	Task			Task 		`gorm:"foreignKey:TaskId;references:ID" json:"task"`
 	Date			time.Time   	`gorm:"type:timestamp;autoCreateTime:true" json:"date"`
 }
 
@@ -52,4 +50,10 @@ type ProfileAttachment struct {
 	Name		string		`gorm:"not null" json:"name"`
 	Src			string		`gorm:"not null" json:"src"`
 	Size		string		`gorm:"not null" json:"size"`
+}
+
+type InviteResponse struct {
+	NotificationID 		uint64 		`json:"id"`
+	Response 			string 		`json:"response"`
+	Respondent			string
 }

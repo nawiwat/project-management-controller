@@ -14,4 +14,7 @@ type  UsersRepository interface {
 	QueryByUsername(ctx context.Context,username string) (model.User, error)
 	CreateToken(ctx context.Context, in model.UserToken) (error)
 	QueryToken(ctx context.Context,username string) (model.UserToken, error)
+	CreateNotification(ctx context.Context, in model.Notification) (error)
+	GetNotification(ctx context.Context, in uint64) (model.Notification , error)
+	DeleteNotification(ctx context.Context, in model.Notification) (error)
 }

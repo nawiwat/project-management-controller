@@ -14,6 +14,7 @@ type Project struct {
 	Email         	string			`json:"email"`
 	Github 			string			`json:"github"`
 	Phone   		string			`json:"phone"`
+	Invitation		[]Invitation	`json:"invitation"`
 	Task			[]Task			`json:"task"`
 	Membership		[]Membership	`json:"membership"`
 }
@@ -31,7 +32,12 @@ type Invitation struct {
 	ID          	uint64 			`gorm:"primarykey,not null;autoIncrement:true;unique" json:"id" query:"id"`
 	UserId			uint64			`json:"user_id"`
 	ProjectId		uint64			`json:"project_id"`
-	Project			Project			`gorm:"foreignKey:ProjectId;references:ID"`
 	Status      	string          `json:"status"`
 	CreateDate		time.Time   	`gorm:"type:timestamp;autoCreateTime:true" json:"invite_date"`
+}
+
+type InviteReq struct {
+	UserId			uint64		`json:"user_id"`
+	ProjectId		uint64		`json:"project_id"`
+	Sender 			string		
 }

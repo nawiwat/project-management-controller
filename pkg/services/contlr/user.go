@@ -69,10 +69,6 @@ func (s *service) AddUser(ctx context.Context, f model.User) (string,error) {
 		return "" , errors.New("fail to create token")
 	}
 
-	if err != nil {
-		return "",err
-	}
-
 	return tokenString , nil
 }
 
@@ -166,5 +162,45 @@ func (s *service) EditProfile(ctx context.Context, f model.ProfileAttachment, u 
 		return err
 	}
 
+	return nil
+}
+
+func (s *service) InviteResponse(ctx context.Context, f model.InviteResponse) error {
+	noti , err := s.usersRepo.GetNotification(ctx,f.NotificationID)
+	if err != nil {
+		return  err
+	}
+
+	if noti.Type != "invitation" {
+		return  errors.New("notification type invalid")
+	}
+
+	inv , err := s.projectsRepo.GetInvite(ctx,noti.InviteId)
+	if err != nil {
+		return  err
+	}
+
+	if f.Response == "accept" {
+		mem := model.Membership{
+			ProjectId: 		inv.ProjectId,
+			UserId:    		inv.UserId,
+			Username:  		f.Respondent,
+			Role:      		"Member",
+		}
+		err = s.projectsRepo.AddMember(ctx,mem)
+		if err != nil {
+			return err
+		}
+	} 
+	
+	err = s.usersRepo.DeleteNotification(ctx,noti)
+	if err != nil {
+		return  err
+	}
+	err = s.projectsRepo.DeleteInvite(ctx,inv)
+	if err != nil {
+		return  err
+	}
+	
 	return nil
 }
