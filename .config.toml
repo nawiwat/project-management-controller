@@ -5,8 +5,8 @@ prom_port = "18002"
 
 [sql]
 driver = "postgres"
-conn = "postgresql://postgres:postgres@localhost:5432/postgres"
-# conn = "postgresql://doadmin:AVNS_JaYJB8V4NEU2iYyfWOS@db-ce-project-do-user-15888743-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require"
+# conn = "postgresql://postgres:postgres@localhost:5432/postgres"
+conn = "postgresql://doadmin:AVNS_JaYJB8V4NEU2iYyfWOS@db-ce-project-do-user-15888743-0.c.db.ondigitalocean.com:25060/defaultdb?sslmode=require"
 
 [log]
 level = "info"

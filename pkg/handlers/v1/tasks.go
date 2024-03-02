@@ -68,7 +68,6 @@ func (r *AppController) UpdateTask(c echo.Context) error {
 	if err := c.Bind(&tsk); err != nil {
 		return err
 	}
-
 	// if err := c.Validate(&tsk); err != nil {
 	// 	return err
 	// }
@@ -80,4 +79,29 @@ func (r *AppController) UpdateTask(c echo.Context) error {
 	}
 
 	return c.JSON(200, map[string]interface{}{"data": out})
+}
+
+func (r *AppController) DeleteTask(c echo.Context) error {
+	_ , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
+
+	var tsk model.Task
+	if err := c.Bind(&tsk); err != nil {
+		return err
+	}
+	if err := c.Validate(&tsk); err != nil {
+		return err
+	}
+
+	err = r.controllerService.DeleteTask(c.Request().Context(), tsk.ID)
+
+	if err != nil {
+		return errors.NewError(echo.ErrInternalServerError.Code, errors.ErrCodeInternalError, "", nil , err)
+	}
+
+	return c.JSON(200, map[string]interface{}{
+		"message": "success",
+	})
 }

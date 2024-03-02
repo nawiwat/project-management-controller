@@ -31,7 +31,7 @@ func registerControllerV1(
 	c.POST("/user", h.AddUser)
 	c.POST("/user/edit",h.EditUser)
 	c.POST("/user/profile",h.EditProfile)
-	//c.POST("/user/invite",h.UserInvitation)
+	
 
 	c.GET("/projects",h.GetProjects)
 	c.GET("/project",h.GetProjectInfo)
@@ -45,6 +45,8 @@ func registerControllerV1(
 	c.POST("/task",h.CreateTask)
 	c.POST("/task/update",h.UpdateTask)
 	c.GET("/task",h.GetTask)
+	c.DELETE("/task",h.DeleteTask)
+
 	//c.POST("/projects/invite",h.InviteUser)
 
 

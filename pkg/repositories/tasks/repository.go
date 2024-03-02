@@ -138,3 +138,39 @@ func (f *tasksRepository) Update(ctx context.Context, in []model.Task ) ([]model
 
 	return out , nil
 }
+
+func (f *tasksRepository) Delete(ctx context.Context, in uint64 ) (error) {
+	var cur_task model.Task
+
+	if err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Preload("Kanban").Where("id = ?", in).Find(&cur_task).Error; err != nil {
+		return errors.Wrap(err, "fail to find taskmember")
+	}
+
+	for _,r := range(cur_task.Attachments) {
+		if err := f.db.Delete(&r).Error; err != nil {
+			return errors.Wrap(err, "fail to delete attachment")
+		}
+	}
+
+	for _,r := range(cur_task.Members) {
+		if err := f.db.Delete(&r).Error; err != nil {
+			return errors.Wrap(err, "fail to delete member")
+		}
+	}
+
+	for _,r := range(cur_task.Comments) {
+		if err := f.db.Delete(&r).Error; err != nil {
+			return errors.Wrap(err, "fail to delete comment")
+		}
+	}
+
+	if err := f.db.Delete(&cur_task.Kanban).Error; err != nil {
+		return errors.Wrap(err, "fail to delete task column")
+	}
+
+	if err := f.db.Delete(&cur_task).Error; err != nil {
+		return errors.Wrap(err, "fail to delete task")
+	}
+
+	return nil
+}

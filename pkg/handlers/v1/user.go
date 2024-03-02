@@ -32,6 +32,10 @@ func NewAppController(
 }
 
 func (r *AppController) GetUsers(c echo.Context) error {
+	_ , err := middlewares.Auth(c)
+	if err != nil {
+		return err
+	}
 	f, err := r.controllerService.GetUsers(c.Request().Context())
 
 	if err != nil {
