@@ -38,11 +38,13 @@ func (f *projectsRepository) Query(ctx context.Context, u string) ([]model.Proje
 	var mem []model.Membership
 	var pids []uint64
 
-	err := f.db.Where("username = ?",u).Find(&mem).Error
+	err := f.db.Where("username = ?",u).Find(&mem).RowsAffected
 
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to query membership")
+	if err == 0 {
+		return nil, nil
 	}
+
+
 
 	for _,r := range(mem) {
 		pids = append(pids, r.ProjectId)
