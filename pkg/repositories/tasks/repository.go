@@ -164,7 +164,7 @@ func (f *tasksRepository) Delete(ctx context.Context, in uint64 ) (error) {
 		}
 	}
 
-	if err := f.db.Delete(&cur_task.Kanban).Error; err != nil {
+	if err := f.db.Where("task_id = ?",in).Delete(&cur_task.Kanban).Error; err != nil {
 		return errors.Wrap(err, "fail to delete task column")
 	}
 
