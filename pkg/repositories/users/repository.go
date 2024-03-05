@@ -158,3 +158,4 @@ func (f *usersRepository) DeleteNotification(ctx context.Context, in model.Notif
 	}
 	return  nil
 }
+

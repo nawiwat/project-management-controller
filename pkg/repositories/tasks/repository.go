@@ -58,7 +58,7 @@ func (f *tasksRepository) Update(ctx context.Context, in []model.Task ) ([]model
 	var out []model.Task
 	var cur_task model.Task
 	for _,r := range(in) {
-		if err := f.db.Updates(&r).Error; err != nil {
+		if err := f.db.Save(&r).Error; err != nil {
 			return nil , errors.Wrap(err, "fail to update task")
 		}
 		if err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Where("id = ?", r.ID).Find(&cur_task).Error; err != nil {
@@ -173,4 +173,33 @@ func (f *tasksRepository) Delete(ctx context.Context, in uint64 ) (error) {
 	}
 
 	return nil
+}
+
+func (f *tasksRepository) QueryByUserId(ctx context.Context, id uint64 ) ([]model.Task , error) {
+	var mem []model.TaskMember
+	var out []model.Task
+
+	err := f.db.Where("user_id = ?", id).Find(&mem).Error
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to query task member")
+	}
+
+	if len(mem) == 0 {
+		return nil , nil
+	}
+
+	tx := f.db.Where("")
+
+	for _,r := range(mem) {
+		tx.Or("id = ?",r.TaskId)
+	}
+	
+	tx.Preload("Kanban").Find(&out)
+
+	if tx.Error != nil {
+		return nil, errors.Wrap(tx.Error, "failed to query task")
+	}
+
+	return out , nil
 }
