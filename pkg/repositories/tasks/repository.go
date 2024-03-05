@@ -64,6 +64,10 @@ func (f *tasksRepository) Update(ctx context.Context, in []model.Task ) ([]model
 		if err := f.db.Preload("Attachments").Preload("Members").Preload("Comments").Where("id = ?", r.ID).Find(&cur_task).Error; err != nil {
 			return nil , errors.Wrap(err, "fail to find taskmember")
 		}
+		if err := f.db.Updates(&r.Kanban).Error; err != nil {
+			return nil , errors.Wrap(err, "fail to kanban")
+		}
+
 
 		for _,n := range(r.Attachments) {
 			if err := f.db.Updates(n).Error; err != nil {
