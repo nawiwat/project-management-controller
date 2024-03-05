@@ -3,6 +3,7 @@ package users
 import (
 	"app-controller/pkg/model"
 	"app-controller/pkg/repositories"
+	"app-controller/pkg/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -159,3 +160,135 @@ func (f *usersRepository) DeleteNotification(ctx context.Context, in model.Notif
 	return  nil
 }
 
+func (f *usersRepository) UpdateNotification(ctx context.Context, in model.User , cur_task []model.Task) (error) {
+	var usr model.User
+
+	for _,r := range(in.Notification){
+		switch r.Type {
+			case "late", "critical", "close", "process":
+				del := true
+				for _,n := range(cur_task){
+					if r.TaskId == n.ID {
+						if n.Kanban.Column != "Done" {
+							del = false
+							break
+						}
+					}
+				}
+				if del {
+					if err := f.db.Delete(&r).Error; err != nil {
+						return errors.Wrap(err, "fail to delete old notification")
+					}
+				}
+			}
+	}
+
+	for _,r := range(cur_task) {
+		create := true
+		if r.Kanban.Column == "Done" {
+			create = false
+		}
+		for _,n := range(in.Notification){
+			if r.ID == n.TaskId {
+				create = false
+			}
+		}
+		if create {
+			noti := model.Notification{
+			UserId: 		in.ID,
+			SendBy:    		"",
+			Type:  			"in_process",
+			Description:    "",
+			TaskId: 		r.ID,
+			}
+			if err := f.db.Create(&noti).Error; err != nil {
+				return errors.Wrap(err, "fail to create new notification")
+			}
+		}
+	}
+
+	err := f.db.Where("id = ?",in.ID).Preload("Notification").Find(&usr).Error
+
+	if err != nil {
+		return errors.Wrap(err, "failed to query users stage:2")
+	}
+
+	for _,r := range(cur_task){
+		status , err := utils.CheckDeadline(r)
+		if err != nil {
+			return errors.Wrap(err, "failed to check deadline")
+		}
+
+		if status == "in_process" {
+			for _,n := range(usr.Notification) {
+				if r.ID == n.TaskId {
+					noti := model.Notification{
+						ID: 			n.ID,
+						UserId: 		n.UserId,
+						SendBy:    		"",
+						Type:  			"in_process",
+						Description:    "",
+						TaskId: 		n.TaskId,
+						}
+					if err := f.db.Updates(&noti).Error; err != nil {
+						return errors.Wrap(err, "fail to update notification in process")
+					}
+					break
+				}
+			}
+		} else if status == "close_due" {
+			for _,n := range(usr.Notification) {
+				if r.ID == n.TaskId {
+					noti := model.Notification{
+						ID: 			n.ID,
+						UserId: 		n.UserId,
+						SendBy:    		"Warning",
+						Type:  			"close",
+						Description:    r.Name + " deadline is 3 days left",
+						TaskId: 		n.TaskId,
+						}
+					if err := f.db.Updates(&noti).Error; err != nil {
+						return errors.Wrap(err, "fail to update notification close due")
+					}
+					break
+				}
+			}
+		} else if status == "critical" {
+			for _,n := range(usr.Notification) {
+				if r.ID == n.TaskId {
+					noti := model.Notification{
+						ID: 			n.ID,
+						UserId: 		n.UserId,
+						SendBy:    		"Warning",
+						Type:  			"critical",
+						Description:    r.Name + " deadline is 1 day left",
+						TaskId: 		n.TaskId,
+						}
+					if err := f.db.Updates(&noti).Error; err != nil {
+						return errors.Wrap(err, "fail to update notification critical due")
+					}
+					break
+				}
+			}
+		} else if status == "late" {
+			for _,n := range(usr.Notification) {
+				if r.ID == n.TaskId {
+					noti := model.Notification{
+						ID: 			n.ID,
+						UserId: 		n.UserId,
+						SendBy:    		"Warning",
+						Type:  			"passed",
+						Description:    r.Name + " has surpassed deadline",
+						TaskId: 		n.TaskId,
+						}
+					if err := f.db.Updates(&noti).Error; err != nil {
+						return errors.Wrap(err, "fail to update notification critical due")
+					}
+					break
+				}
+			}
+		}
+	}
+
+	return  nil
+}

@@ -51,8 +51,6 @@ func (r *AppController) GetUser(c echo.Context) error {
 		return err
 	}
 
-	//err := r.controllerService.UpdateNotification(c.Request().Context(),user.Username)
-
 	f, err := r.controllerService.GetUser(c.Request().Context(),user.Username)
 
 	if err != nil {

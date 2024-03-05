@@ -25,8 +25,22 @@ func (s *service) GetUsers(ctx context.Context) ([]model.User, error) {
 
 func (s *service) GetUser(ctx context.Context,u string) (model.User, error) {
 
-	out, err := s.usersRepo.QueryInfo(ctx,u)
+	usr, err := s.usersRepo.QueryInfo(ctx,u)
+	if err != nil {
+		return model.User{}, err
+	}
 
+	cur_task , err := s.tasksRepo.QueryByUserId(ctx,usr.ID)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	err = s.usersRepo.UpdateNotification(ctx,usr,cur_task)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	out, err := s.usersRepo.QueryInfo(ctx,u)
 	if err != nil {
 		return model.User{}, err
 	}

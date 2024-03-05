@@ -1,11 +1,19 @@
-FROM golang:1.18-alpine3.16 AS builder
-RUN mkdir /work
-WORKDIR /work
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o app ./*.go
+# Use the official Golang image
+FROM golang:latest
 
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-COPY --from=builder /work/app /
-CMD ["/app"]
-EXPOSE 8001
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the local package files to the container's workspace
+COPY . .
+
+RUN go get
+
+# Build the Go app
+RUN go build -o main .
+
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
+# Command to run the executable
+CMD ["./main"]

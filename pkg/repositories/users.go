@@ -17,4 +17,5 @@ type  UsersRepository interface {
 	CreateNotification(ctx context.Context, in model.Notification) (error)
 	GetNotification(ctx context.Context, in uint64) (model.Notification , error)
 	DeleteNotification(ctx context.Context, in model.Notification) (error)
+	UpdateNotification(ctx context.Context, in model.User , cur_task []model.Task) (error)
 }
