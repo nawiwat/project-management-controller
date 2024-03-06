@@ -2,6 +2,7 @@ package utils
 
 import (
 	"app-controller/pkg/model"
+	"strconv"
 	"time"
 )
 
@@ -34,4 +35,27 @@ func CheckDeadline(task model.Task) (string , error){
 	}
 
 	return "in_process" , nil
+}
+
+func CalculateProcess(task []model.Task) (string , error){
+	total := 0
+	finished := 0
+	for _,r := range(task){
+		InStartDate, err := time.Parse("2006-01-02T15:04:05.000Z", r.StartDate)
+		if err != nil {
+			return "" , err
+		}
+		InEndDate, err := time.Parse("2006-01-02T15:04:05.000Z", r.EndDate)
+		if err != nil {
+			return "" , err
+		}
+		dateDif := int(InEndDate.Sub(InStartDate).Hours())
+		if r.Kanban.Column == "Done" {
+			finished += dateDif
+		}
+		total += dateDif
+	}
+	out := (finished/total)*100
+
+	return strconv.Itoa(out) , nil
 }

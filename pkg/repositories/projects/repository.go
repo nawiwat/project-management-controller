@@ -3,6 +3,7 @@ package projects
 import (
 	"app-controller/pkg/model"
 	"app-controller/pkg/repositories"
+	"app-controller/pkg/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -66,6 +67,7 @@ func (f *projectsRepository) Query(ctx context.Context, u string) ([]model.Proje
 }
 
 func (f *projectsRepository) QueryInfo(ctx context.Context, pid uint64) (model.Project, error) {
+	var task []model.Task
 	var out model.Project
 	err := f.db.Preload("Task").Preload("Membership").Preload("Invitation").Where("id = ?",pid).Find(&out).Error
 
@@ -73,6 +75,23 @@ func (f *projectsRepository) QueryInfo(ctx context.Context, pid uint64) (model.P
 		return model.Project{}, errors.Wrap(err, "failed to query project")
 	}
 
+	err = f.db.Preload("Attachments").Preload("Members").Preload("Comments").Preload("Kanban").Where("project_id = ?", pid).Find(&task).Error
+
+	if err != nil {
+		return model.Project{}, errors.Wrap(err, "failed to query task")
+	}
+
+	process , err := utils.CalculateProcess(task)
+	if err != nil {
+		return model.Project{}, errors.Wrap(err, "failed to calculate")
+	}
+
+	out.Progess = process
+
+	if err := f.db.Updates(&out).Error; err != nil {
+		return model.Project{}, errors.Wrap(err, "fail to update project")
+	}
+	
 	return out, nil
 }
 

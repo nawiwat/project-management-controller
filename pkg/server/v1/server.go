@@ -80,7 +80,7 @@ func NewServer() (*Server, error) {
 	filePath := ""
 
 	if filePath == "" {
-		filePath = ".config.toml"
+		filePath = "config.toml"
 	}
 
 	c := LoadConfig(filePath)
