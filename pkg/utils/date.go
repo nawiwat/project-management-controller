@@ -56,6 +56,10 @@ func CalculateProcess(task []model.Task) (string , error){
 		total += dateDif
 	}
 
+	if total == 0 {
+		return "0" , nil
+	}
+
 	out := (finished*100/total)
 	
 	return strconv.Itoa(out) , nil
