@@ -1,8 +1,3 @@
-[server]
-host = "localhost"
-port = "8001"
-prom_port = "18002"
-
 [sql]
 driver = "postgres"
 # conn = "postgresql://postgres:postgres@localhost:5432/postgres"
