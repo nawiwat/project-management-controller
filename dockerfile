@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy the local package files to the container's workspace
 COPY . .
-COPY .config.toml /app/.config.toml
+COPY config.toml /app/config.toml
 
 RUN go get
 
