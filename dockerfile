@@ -6,9 +6,12 @@ WORKDIR /app
 
 # Copy the local package files to the container's workspace
 COPY . .
+
+# Copying the config file
 COPY config.toml /app/config.toml
 
-RUN go get
+# Download dependencies
+RUN go mod download
 
 # Build the Go app
 RUN go build -o main .
@@ -17,4 +20,4 @@ RUN go build -o main .
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["./main"]
+CMD ["./main"] 
