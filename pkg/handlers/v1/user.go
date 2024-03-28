@@ -1,12 +1,6 @@
 package handlers
 
 import (
-	// inputs "acw-crypto-risk-management/pkg/inputs/riskmgmt"
-	// "acw-crypto-risk-management/pkg/middlewares"
-	// "acw-crypto-risk-management/pkg/requests"
-	// "acw-crypto-risk-management/pkg/services/riskmgmt"
-	// "encoding/json"
-	// "strings"
 	"app-controller/pkg/errors"
 	"app-controller/pkg/middlewares"
 	"app-controller/pkg/model"

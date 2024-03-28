@@ -42,7 +42,7 @@ func (f *ACNFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		}
 	}
 
-	fields := fmt.Sprintf("%s|2|%s|acw-crypto-risk-management|,%s,%s,%s|%s|main|%s|%s\n",
+	fields := fmt.Sprintf("%s|2|%s|project-management|,%s,%s,%s|%s|main|%s|%s\n",
 		entry.Time.Format("2006-01-02T15:04:05.000Z07:00"),
 		strings.ToUpper(entry.Level.String()),
 		ip,

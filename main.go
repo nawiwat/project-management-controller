@@ -1,7 +1,6 @@
 package main
 
 import (
-	"app-controller/pkg/logformatter"
 	"app-controller/pkg/server/v1"
 	"os"
 	"os/signal"
@@ -11,7 +10,6 @@ import (
 )
 
 func init() {
-	logrus.SetFormatter(new(logformatter.ACNFormatter))
 	logrus.SetOutput(os.Stdout)
 }
 
